@@ -1,0 +1,17 @@
+allprojects {
+    afterEvaluate {
+        sourceSets.client.java.srcDir('tools/port-smoke')
+        tasks.named('processResources') {
+            outputs.upToDateWhen { false }
+            doLast {
+                def metadataFile = new File(destinationDir, 'fabric.mod.json')
+                def metadata = new groovy.json.JsonSlurper().parse(metadataFile)
+                metadata.entrypoints['fabric-client-gametest'] = ['com.holdmylua.test.PortSmokeTest']
+                metadataFile.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(metadata))
+            }
+        }
+        loom.runs.client {
+            property 'fabric.client.gametest', 'true'
+        }
+    }
+}

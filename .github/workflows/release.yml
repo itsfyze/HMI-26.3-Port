@@ -1,0 +1,43 @@
+name: Publish HMI 26.3 Port v1.3
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'releases/v1.3/**'
+      - '.github/workflows/release.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-v1.3
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify release files
+        working-directory: releases/v1.3
+        run: sha256sum --check SHA256SUMS
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          if gh release view v1.3 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release v1.3 already exists; preserving its assets."
+            exit 0
+          fi
+          gh release create v1.3 \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "HMI 26.3 Port v1.3" \
+            --notes-file releases/v1.3/RELEASE_NOTES.md \
+            "releases/v1.3/HMI 26.3 v1.3 Port.jar" \
+            "releases/v1.3/HMI-26.3-Port-v1.3-sources.jar" \
+            "releases/v1.3/HMI-26.3-Port-v1.3-source.zip" \
+            releases/v1.3/SHA256SUMS

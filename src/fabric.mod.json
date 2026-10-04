@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "holdmyitems",
+  "version": "${version}",
+  "name": "Hold My Items",
+  "description": "Nothing to look at",
+  "authors": [
+    "sapling"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/holdmyitems/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.holdmylua.source.LuaTestHMI"
+    ]
+  },
+  "mixins": [
+    {
+      "config": "holdmyitems.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": "\u003e\u003d0.18.1",
+    "minecraft": "~26.3",
+    "java": "\u003e\u003d25",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "jars": [
+    {
+      "file": "META-INF/jars/luaj-jse-3.0.1.jar"
+    }
+  ]
+}
